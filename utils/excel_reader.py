@@ -40,7 +40,7 @@ def read_csv_data(file_path: str):
         print(f"Error reading CSV file: {e}")
     return data
 
-
+'''
 def read_excel_data(file_path: str, sheet_name: str = None):
     """
     Reads test data from an Excel file and returns a list of tuples.
@@ -55,3 +55,24 @@ def read_excel_data(file_path: str, sheet_name: str = None):
     except Exception as e:
         print(f"Error reading Excel file: {e}")
     return data
+'''
+def read_excel_data(file_path, sheet_names):
+    workbook = openpyxl.load_workbook(file_path)
+    all_data = []
+
+    if isinstance(sheet_names, str):
+        sheet_names = [sheet_names]
+
+    for sheet_name in sheet_names:
+        sheet = workbook[sheet_name]
+
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            cleaned_row = [
+                "" if cell is None else str(cell).strip()
+                for cell in row
+            ]
+            all_data.append(
+                (sheet_name, *cleaned_row)
+            )
+
+    return all_data
